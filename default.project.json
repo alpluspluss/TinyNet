@@ -1,0 +1,6 @@
+{
+  "name": "TinyPacket",
+  "tree": {
+    "$path": "src/"
+  }
+}
