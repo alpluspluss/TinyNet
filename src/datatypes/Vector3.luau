@@ -26,6 +26,8 @@
 --!native
 --!optimize 2
 
+local malloc = require(script.Parent.Parent.allocator).malloc
+
 -- // scaling factor to preserve decimal precision
 -- // this allows fractional movements with keeping the memory compact
 local SCALE = 10
@@ -42,7 +44,7 @@ local function write(v: Vector3)
     local y = math.clamp(math.floor(v.Y * SCALE), -32768, 32767)
     local z = math.clamp(math.floor(v.Z * SCALE), -32768, 32767)
 
-    local b = buffer.create(6)
+    local b = malloc(6)
     buffer.writei16(b, 0, x)
 	buffer.writei16(b, 2, y)
 	buffer.writei16(b, 4, z)

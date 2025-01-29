@@ -31,21 +31,23 @@
 --!native
 --!optimize 2
 
+local malloc = require(script.Parent.Parent.allocator).malloc
+
 local function write(v: CFrame): buffer
 	local pos = v.Position
 	local pitch, yaw, roll = v:ToEulerAnglesXYZ()
 
-	local pitchByte = math.floor(((pitch + math.pi) / (2 * math.pi)) * 255)
-	local yawByte = math.floor(((yaw + math.pi) / (2 * math.pi)) * 255)
-	local rollByte = math.floor(((roll + math.pi) / (2 * math.pi)) * 255)
+	local pitch_byte = math.floor(((pitch + math.pi) / (2 * math.pi)) * 255)
+	local yaw_byte = math.floor(((yaw + math.pi) / (2 * math.pi)) * 255)
+	local roll_byte = math.floor(((roll + math.pi) / (2 * math.pi)) * 255)
 
-	local b = buffer.create(15)
+	local b = malloc(15)
 	buffer.writef32(b, 0, pos.X)
 	buffer.writef32(b, 4, pos.Y)
 	buffer.writef32(b, 8, pos.Z)
-	buffer.writeu8(b, 12, pitchByte)
-	buffer.writeu8(b, 13, yawByte)
-	buffer.writeu8(b, 14, rollByte)
+	buffer.writeu8(b, 12, pitch_byte)
+	buffer.writeu8(b, 13, yaw_byte)
+	buffer.writeu8(b, 14, roll_byte)
 	return b
 end
 
@@ -54,13 +56,13 @@ local function read(b: buffer): CFrame
 	local y = buffer.readf32(b, 4)
 	local z = buffer.readf32(b, 8)
 
-	local pitchByte = buffer.readu8(b, 12)
-	local yawByte = buffer.readu8(b, 13)
-	local rollByte = buffer.readu8(b, 14)
+	local pitch_byte = buffer.readu8(b, 12)
+	local yaw_byte = buffer.readu8(b, 13)
+	local roll_byte = buffer.readu8(b, 14)
 
-	local pitch = (pitchByte / 255) * (2 * math.pi) - math.pi
-	local yaw = (yawByte / 255) * (2 * math.pi) - math.pi
-	local roll = (rollByte / 255) * (2 * math.pi) - math.pi
+	local pitch = (pitch_byte / 255) * (2 * math.pi) - math.pi
+	local yaw = (yaw_byte / 255) * (2 * math.pi) - math.pi
+	local roll = (roll_byte / 255) * (2 * math.pi) - math.pi
 
 	return CFrame.new(x, y, z) * CFrame.Angles(pitch, yaw, roll)
 end

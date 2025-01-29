@@ -26,6 +26,8 @@
 --!native
 --!optimize 2
 
+local malloc = require(script.Parent.Parent.allocator).malloc
+
 local function read(buf: buffer): Color3
 	local packed = bit32.bor(
 		bit32.lshift(buffer.readu8(buf, 0), 16),
@@ -45,7 +47,7 @@ local function write(v: Color3): buffer
 		bit32.lshift(math.round(v.G * 255), 8),
 		math.round(v.B * 255)
 	)
-	local b = buffer.create(3)
+	local b = malloc(3)
 	buffer.writeu8(b, 0, bit32.extract(packed, 16, 8))
 	buffer.writeu8(b, 1, bit32.extract(packed, 8, 8))
 	buffer.writeu8(b, 2, bit32.extract(packed, 0, 8))
