@@ -5,18 +5,15 @@ local function inspect(b: buffer): string
     local length = buffer.len(b)
     local chunks = {}
     local used_bytes = 0
-
-    -- Check for used bytes (non-zero)
     for i = 0, length - 1 do
         local byte = buffer.readu8(b, i)
         if byte ~= 0 then
             used_bytes = i + 1
         end
-        -- Format differently for used vs unused bytes
         if i < used_bytes then
             table.insert(chunks, string.format("%02X", byte))
         else
-            table.insert(chunks, "··")  -- Visual indicator for unused bytes
+            table.insert(chunks, "··")
         end
         table.insert(chunks, " ")
     end
