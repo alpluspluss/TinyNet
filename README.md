@@ -2,13 +2,12 @@
 
 TinyPacket
 ====
-A bit-based buffer networking library
 
-</div>
-
----
+### A bit-based buffer networking library
 
 TinyPacket is a high-performance serialization library that transforms Luau data into highly optimized buffers for networking. It handles aggressive bit-level optimization, buffer management, and data compression automatically, letting you focus on your game logic instead of worrying about network efficiency.
+
+</div>
 
 ## Installation
 

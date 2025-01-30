@@ -1,9 +1,17 @@
+--[[
+    Part of TinyPacket library. Licensed under MIT.
+
+    @author: alpluspluss
+]]
+	
 --!native
 --!optimize 2
 
 local capacity: number = 8
 local data: buffer = buffer.create(capacity)
 local size: number = 0
+local refs: { unknown } = {}
+local next_ref: number = 1
 
 local GROWTH_MULTIPLIER: number = 2
 
@@ -14,9 +22,9 @@ local function malloc(sz: number): (buffer, number)
 		size = 0
 	end
 
-	local writeIndex = size
+	local wi = size
 	size += sz
-	return data, writeIndex
+	return data, wi
 end
 
 local function free(b: buffer)
@@ -27,9 +35,28 @@ local function free(b: buffer)
 	end
 end
 
+local function write_ref(value: unknown): number
+    local id = next_ref
+    refs[id] = value
+    next_ref += 1
+    return id
+end
+
+local function get_ref(id: number): unknown?
+    return refs[id]
+end
+
+local function get_refs(): {unknown}
+    return refs
+end
+
 return {
 	malloc = malloc,
 	free = free,
+	write_ref = write_ref,
+    get_ref = get_ref,
+    get_refs = get_refs,
+	
 	get_capacity = function() return capacity end,
 	get_size = function() return size end
 }

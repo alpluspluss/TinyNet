@@ -28,14 +28,17 @@
 
 local malloc = require(script.Parent.Parent.allocator).malloc
 
+local readi16 = buffer.readi16
+local writei16 = buffer.writei16
+
 -- // scaling factor to preserve decimal precision
 -- // this allows fractional movements with keeping the memory compact
 local SCALE = 10
 
 local function read(b: buffer): Vector3
-    local x = buffer.readi16(b, 0) / SCALE
-	local y = buffer.readi16(b, 2) / SCALE
-	local z = buffer.readi16(b, 4) / SCALE
+    local x = readi16(b, 0) / SCALE
+	local y = readi16(b, 2) / SCALE
+	local z = readi16(b, 4) / SCALE
 	return Vector3.new(x, y, z)
 end
 
@@ -45,9 +48,9 @@ local function write(v: Vector3)
     local z = math.clamp(math.floor(v.Z * SCALE), -32768, 32767)
 
     local b = malloc(6)
-    buffer.writei16(b, 0, x)
-	buffer.writei16(b, 2, y)
-	buffer.writei16(b, 4, z)
+    writei16(b, 0, x)
+	writei16(b, 2, y)
+	writei16(b, 4, z)
 	return b
 end
 
