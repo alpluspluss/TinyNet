@@ -3,14 +3,24 @@
 
 local function inspect(b: buffer): string
     local length = buffer.len(b)
-    local chunks = table.create(length * 3)
-    
+    local chunks = {}
+    local used_bytes = 0
+
+    -- Check for used bytes (non-zero)
     for i = 0, length - 1 do
         local byte = buffer.readu8(b, i)
-        chunks[i * 3 + 1] = string.format("%02X", byte)
-        chunks[i * 3 + 2] = " "
+        if byte ~= 0 then
+            used_bytes = i + 1
+        end
+        -- Format differently for used vs unused bytes
+        if i < used_bytes then
+            table.insert(chunks, string.format("%02X", byte))
+        else
+            table.insert(chunks, "··")  -- Visual indicator for unused bytes
+        end
+        table.insert(chunks, " ")
     end
-    
+
     local hex = table.concat(chunks)
     local rows = {}
     for i = 1, #hex, 48 do
@@ -18,8 +28,10 @@ local function inspect(b: buffer): string
     end
 
     return string.format(
-        "Buffer length: %d bytes\nHex dump:\n%s", 
+        "Buffer length: %d bytes\nUsed bytes: %d\nWasted bytes: %d\nHex dump:\n%s", 
         length,
+        used_bytes,
+        length - used_bytes,
         table.concat(rows, "\n")
     )
 end
