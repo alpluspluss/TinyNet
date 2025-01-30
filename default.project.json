@@ -1,5 +1,5 @@
 {
-  "name": "TinyPacket",
+  "name": "tinynet",
   "tree": {
     "$path": "src/"
   }

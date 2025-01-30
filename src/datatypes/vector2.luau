@@ -1,5 +1,5 @@
 --[[
-    Part of TinyPacket library. Licensed under MIT.
+    Part of TinyNet library. Licensed under MIT.
 
     @author: alpluspluss
 ]]

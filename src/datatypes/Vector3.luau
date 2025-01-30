@@ -7,7 +7,7 @@
     @author: alpluspluss
     @note
         a typical vector3 costs 3 * 4 = 12 bytes
-        optimized: 6 bytes
+        optimized: 6 bytes | actual 5 & 1 from rtt
         50% memory reduction.
 
         most game updates usually involves small position changes rather
