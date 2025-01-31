@@ -12,8 +12,8 @@ local malloc = allocator.malloc
 local write_ref = allocator.write_ref
 local get_ref = allocator.get_ref
 
-local function read(b: buffer, offset: number): (any, number)
-   local ref_id = buffer.readu8(b, offset)
+local function read(b: buffer): (any, number)
+   local ref_id = buffer.readu8(b, 0)
    return get_ref(ref_id), 1
 end
 
@@ -25,6 +25,6 @@ local function write(value: unknown): buffer
 end
 
 return {
-   read = read,
+   read = read :: any & (b: buffer) -> any,
    write = write
 }

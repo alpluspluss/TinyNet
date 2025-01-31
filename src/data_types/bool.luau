@@ -9,8 +9,8 @@
 
 local malloc = require(script.Parent.Parent.allocator).malloc
 
-local function read(b: buffer): boolean
-    return buffer.readu8(b, 0) == 1
+local function read(b: buffer, offset: number): (boolean, number)
+    return buffer.readu8(b, offset) == 1, 1
 end
 
 local function write(v: boolean): buffer

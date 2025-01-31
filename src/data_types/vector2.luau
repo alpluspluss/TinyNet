@@ -24,7 +24,7 @@ local function write(v: Vector2): buffer
     local x = math.clamp(math.floor(v.X * SCALE), -32768, 32767)
     local y = math.clamp(math.floor(v.Y * SCALE), -32768, 32767)
 
-    local b = malloc(4)  -- 2 components * 2 bytes = 4 bytes total
+    local b = malloc(4)
     writei16(b, 0, x)
     writei16(b, 2, y)
     return b

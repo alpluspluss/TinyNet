@@ -7,8 +7,7 @@
 --!native
 --!optimize 2
 
-local allocator = require(script.Parent.Parent.allocator)
-local malloc = allocator.malloc
+local malloc = require(script.Parent.Parent.allocator).malloc
 local string_type = require(script.Parent.string)
 local unknown_type = require(script.Parent.unknown)
 
@@ -21,7 +20,7 @@ local key_buffers = {}
 local value_buffers = {}
 local buffer_sizes = {}
 
-local function read(b: buffer, offset: number): ({[string]: unknown}, number)
+local function read(b: buffer, offset: number): ({ [string]: unknown }, number)
     local map = {}
     local cursor = offset
 
@@ -36,7 +35,6 @@ local function read(b: buffer, offset: number): ({[string]: unknown}, number)
         cursor += v_sz
         map[k] = v
     end
-    
     return map, cursor - offset
 end
 
@@ -79,7 +77,10 @@ local function write(map: { [string]: unknown }): buffer
     return b
 end
 
-return {
-    read = read,
-    write = write
-}
+-- // FIXME
+return function<V>(value_type: { [string]: { read: (buffer) -> V, write: (V) -> buffer } })
+	return {
+		read = read,
+		write = write
+	}
+end

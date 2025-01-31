@@ -1,2 +1,6 @@
 *.rbxm
 *.rbxmx
+*.rbxl
+*.rbxl.lock
+
+DevPackages/

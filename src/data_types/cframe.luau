@@ -5,9 +5,9 @@
 
     @author: alpluspluss
     @note
-        standard CFrame representation: potentially 12 * 4 = 48 bytes
+        standard CFrame representation: 28 bytes
         optimized representation: 15 bytes
-        68.75% memory reduction.
+        .. memory reduction.
 
         rotation compression strategy:
          * stores all three rotation components (pitch, yaw, and roll)
@@ -51,7 +51,7 @@ local function write(v: CFrame): buffer
 	return b
 end
 
-local function read(b: buffer): CFrame
+local function read(b: buffer): (CFrame, number)
 	local x = buffer.readf32(b, 0)
 	local y = buffer.readf32(b, 4)
 	local z = buffer.readf32(b, 8)
@@ -64,7 +64,7 @@ local function read(b: buffer): CFrame
 	local yaw = (yaw_byte / 255) * (2 * math.pi) - math.pi
 	local roll = (roll_byte / 255) * (2 * math.pi) - math.pi
 
-	return CFrame.new(x, y, z) * CFrame.Angles(pitch, yaw, roll)
+	return CFrame.new(x, y, z) * CFrame.Angles(pitch, yaw, roll), 15
 end
 
 return {
