@@ -33,10 +33,11 @@ jobs:
       
       - name: Get branch name
         id: branch_name
+        shell: pwsh
         run: |
-          FULL_BRANCH=${GITHUB_REF#refs/heads/}
-          VERSION=${FULL_BRANCH#release/}
-          echo "branch=$VERSION" >> $GITHUB_OUTPUT
+          $FULL_BRANCH = $env:GITHUB_REF -replace '^refs/heads/'
+          $VERSION = $FULL_BRANCH -replace '^release/'
+          echo "branch=$VERSION" >> $env:GITHUB_OUTPUT
       
       - name: Check if release exists
         id: check_release
