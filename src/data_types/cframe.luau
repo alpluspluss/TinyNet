@@ -25,7 +25,8 @@
 
         FYI: 1.4 degree precision is basically unnoticeable in most games.
 
-		MAYBE-TODO: Use partial bytes to store pitch, yaw, roll to reduce the memory from 15B to 12-13B
+		MAYBE-TODO: Use partial bytes to store pitch, yaw, roll to reduce the memory from 
+			15B to 12-13B
 ]]
 
 --!native
@@ -33,41 +34,51 @@
 
 local malloc = require(script.Parent.Parent.allocator).malloc
 
+local writef32 = buffer.writef32
+local writeu8 = buffer.writeu8
+local readf32 = buffer.readf32
+local readu8 = buffer.readu8
+
+local PI = math.pi
+local TWO_PI = 2 * PI
+local ANGLE_TO_BYTE = 255 / TWO_PI
+local BYTE_TO_ANGLE = TWO_PI / 255
+local floor = math.floor
+
 local function write(v: CFrame): buffer
-	local pos = v.Position
-	local pitch, yaw, roll = v:ToEulerAnglesXYZ()
+    local pos = v.Position
+    local pitch, yaw, roll = v:ToEulerAnglesXYZ()
 
-	local pitch_byte = math.floor(((pitch + math.pi) / (2 * math.pi)) * 255)
-	local yaw_byte = math.floor(((yaw + math.pi) / (2 * math.pi)) * 255)
-	local roll_byte = math.floor(((roll + math.pi) / (2 * math.pi)) * 255)
+    local pitch_byte = floor((pitch + PI) * ANGLE_TO_BYTE)
+    local yaw_byte = floor((yaw + PI) * ANGLE_TO_BYTE)
+    local roll_byte = floor((roll + PI) * ANGLE_TO_BYTE)
 
-	local b = malloc(15)
-	buffer.writef32(b, 0, pos.X)
-	buffer.writef32(b, 4, pos.Y)
-	buffer.writef32(b, 8, pos.Z)
-	buffer.writeu8(b, 12, pitch_byte)
-	buffer.writeu8(b, 13, yaw_byte)
-	buffer.writeu8(b, 14, roll_byte)
-	return b
+    local b = malloc(15)
+    writef32(b, 0, pos.X)
+    writef32(b, 4, pos.Y)
+    writef32(b, 8, pos.Z)
+    writeu8(b, 12, pitch_byte)
+    writeu8(b, 13, yaw_byte)
+    writeu8(b, 14, roll_byte)
+    return b
 end
 
-local function read(b: buffer): (CFrame, number)
-	local x = buffer.readf32(b, 0)
-	local y = buffer.readf32(b, 4)
-	local z = buffer.readf32(b, 8)
+local function read(b: buffer, offset: number): (CFrame, number)
+    local x = readf32(b, offset)
+    local y = readf32(b, offset + 4)
+    local z = readf32(b, offset + 8)
 
-	local pitch_byte = buffer.readu8(b, 12)
-	local yaw_byte = buffer.readu8(b, 13)
-	local roll_byte = buffer.readu8(b, 14)
+    local pitch_byte = readu8(b, offset + 12)
+    local yaw_byte = readu8(b, offset + 13)
+    local roll_byte = readu8(b, offset + 14)
 
-	local pitch = (pitch_byte / 255) * (2 * math.pi) - math.pi
-	local yaw = (yaw_byte / 255) * (2 * math.pi) - math.pi
-	local roll = (roll_byte / 255) * (2 * math.pi) - math.pi
-
-	return CFrame.new(x, y, z) * CFrame.Angles(pitch, yaw, roll), 15
+    local pitch = pitch_byte * BYTE_TO_ANGLE - PI
+    local yaw = yaw_byte * BYTE_TO_ANGLE - PI
+    local roll = roll_byte * BYTE_TO_ANGLE - PI
+    return CFrame.new(x, y, z) * CFrame.Angles(pitch, yaw, roll), 15
 end
 
 return {
-	read = read,
-	write = write
+    read = read,
+    write = write
 }

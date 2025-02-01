@@ -3,7 +3,7 @@
 
     @author: alpluspluss
 ]]
-
+    
 return {
     array = require(script.data_types.array),
     bool = require(script.data_types.bool),
@@ -19,7 +19,8 @@ return {
     f32 = require(script.data_types.number).f32,
     f64 = require(script.data_types.number).f64,
     optional = require(script.data_types.optional),
-    string = require(script.data_types.string),
+    smallstr = require(script.data_types.smallstr),
+    str = require(script.data_types.str),
     map = require(script.data_types.map),
     unknown = require(script.data_types.unknown),
     vec2 = require(script.data_types.vector2),

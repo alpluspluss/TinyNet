@@ -14,9 +14,9 @@ local writei16 = buffer.writei16
 
 local SCALE = 10
 
-local function read(b: buffer): (Vector2, number)
-    local x = readi16(b, 0) / SCALE
-    local y = readi16(b, 2) / SCALE
+local function read(b: buffer, offset: number): (Vector2, number)
+    local x = readi16(b, offset) / SCALE
+    local y = readi16(b, offset + 2) / SCALE
     return Vector2.new(x, y), 4
 end
 

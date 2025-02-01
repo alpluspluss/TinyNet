@@ -1,3 +1,9 @@
+--[[
+    Part of TinyNet library. Licensed under MIT.
+
+    @author: alpluspluss
+]]
+
 --!native
 --!optimize 2
 
@@ -13,9 +19,9 @@ local create = table.create
 local value_buffers = create(32)
 local buffer_sizes = create(32)
 
-local function read<T>(b: buffer, offset: number, value_reader: (buffer, number) -> (T, number)): ({ T }, number)
-	local arr_length = readu8(b, offset)
-	local cursor = offset + 1
+local function read<T>(b: buffer, value_reader: (buffer, number) -> (T, number)): { T }
+	local arr_length = readu8(b, 0)
+	local cursor = 1
 	local arr = create(arr_length)
 
 	for i = 1, arr_length do
@@ -23,7 +29,7 @@ local function read<T>(b: buffer, offset: number, value_reader: (buffer, number)
 		arr[i] = value
 		cursor += value_size
 	end
-	return arr, cursor - offset
+	return arr
 end 
 
 local function write<T>(arr: { T }, value_writer: (T) -> buffer): buffer
@@ -63,10 +69,10 @@ return function<T>(value_type: {
 	write: (T) -> buffer 
 	})
 	return {
-		read = function(b: buffer, offset: number)
-			return read(b, offset, value_type.read)
+		read = function(b: buffer)
+			return read(b, value_type.read)
 		end,
-		write = function(arr: {T})
+		write = function(arr: { T })
 			return write(arr, value_type.write)
 		end
 	}

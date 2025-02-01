@@ -1,3 +1,9 @@
+--[[
+    Part of TinyNet library. Licensed under MIT.
+
+    @author: alpluspluss
+]]
+	
 --!native
 --!optimize 2
 
@@ -7,8 +13,8 @@ local writeu8 = buffer.writeu8
 local copy = buffer.copy
 local len = buffer.len
 
-local function read<T>(b: buffer, value_reader: (buffer, number) -> (T, number)): (T?, number)
-	local exists = readu8(b, 0) == 1
+local function read<T>(b: buffer, offset: number, value_reader: (buffer, number) -> (T, number)): (T?, number)
+	local exists = readu8(b, offset) == 1
 	if not exists then
 		return nil, 1
 	end
@@ -32,11 +38,10 @@ local function write<T>(v: T?, value_writer: (T) -> buffer): buffer
 	return b
 end
 
--- // MAYBE_FIX
 return function<T>(value_type: { read: (buffer, number) -> (T, number), write: (T) -> buffer })
 	return {
 		read = function(b: buffer, offset: number)
-			return read(b, value_type.read)
+			return read(b, offset, value_type.read)
 		end,
 		write = function(v: T?)
 			return write(v, value_type.write)

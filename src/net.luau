@@ -1,3 +1,8 @@
+--[[
+    Part of TinyNet library. Licensed under MIT.
+    @author: alpluspluss
+]]
+	
 --!native
 --!optimize 2
 
@@ -10,8 +15,8 @@ local net = {}
 net.__index = net
 
 type Schema<T> = {
-	read: (buffer) -> T,
-	write: (T) -> buffer
+	read: (buffer, number) -> T,
+	write: (T, number) -> buffer
 }
 
 type NetPacket<T> = {

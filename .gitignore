@@ -4,3 +4,4 @@
 *.rbxl.lock
 
 DevPackages/
+.DS_Store

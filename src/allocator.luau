@@ -12,11 +12,12 @@ local size: number = 0
 local refs: { unknown } = {}
 local next_ref: number = 1
 
+-- // MAYBE-TODO: buffer reuse
+-- // was actually planning to be awesome but breh
+-- // too much of a hassle; Roblox GC should handle 
+-- // this fine
 local function malloc(sz: number): (buffer, number)
-	if sz > buffer.len(data) then
-		data = buffer.create(sz)
-	end
-	return data, 0
+	return buffer.create(sz), 0
 end
 
 local function free(b: buffer)

@@ -28,11 +28,11 @@
 
 local malloc = require(script.Parent.Parent.allocator).malloc
 
-local function read(buf: buffer): (Color3, number)
+local function read(buf: buffer, offset: number): (Color3, number)
 	local packed = bit32.bor(
 		bit32.lshift(buffer.readu8(buf, 0), 16),
-		bit32.lshift(buffer.readu8(buf, 1), 8),
-		buffer.readu8(buf, 2)
+		bit32.lshift(buffer.readu8(buf, offset + 1), 8),
+		buffer.readu8(buf, offset + 2)
 	)
 	return Color3.fromRGB(
 		bit32.extract(packed, 16, 8),

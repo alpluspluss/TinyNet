@@ -35,10 +35,10 @@ local writei16 = buffer.writei16
 -- // this allows fractional movements with keeping the memory compact
 local SCALE = 10
 
-local function read(b: buffer): Vector3
-    local x = readi16(b, 0) / SCALE
-	local y = readi16(b, 2) / SCALE
-	local z = readi16(b, 4) / SCALE
+local function read(b: buffer, offset: number): Vector3
+    local x = readi16(b, offset) / SCALE
+	local y = readi16(b, offset + 2) / SCALE
+	local z = readi16(b, offset + 4) / SCALE
 	return Vector3.new(x, y, z), 6
 end
 
