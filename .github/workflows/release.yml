@@ -3,7 +3,7 @@ name: Create Release
 on:
   push:
     branches:
-      - 'v*'
+      - 'release/v*'
 
 jobs:
   check_and_release:
@@ -33,7 +33,10 @@ jobs:
       
       - name: Get branch name
         id: branch_name
-        run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+        run: |
+          FULL_BRANCH=${GITHUB_REF#refs/heads/}
+          VERSION=${FULL_BRANCH#release/}
+          echo "branch=$VERSION" >> $GITHUB_OUTPUT
       
       - name: Check if release exists
         id: check_release
