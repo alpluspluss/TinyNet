@@ -25,6 +25,6 @@ local function write(value: Instance): buffer
 end
 
 return {
-    read = read :: any & (b: buffer) -> (Instance),
+    read = read,
     write = write
 }

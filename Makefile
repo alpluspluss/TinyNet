@@ -1,14 +1,16 @@
-.PHONY: clean get-deps build
+#!/usr/bin/sh
+
+.PHONY: clean get-deps srcmap build
 
 get-deps:
-	wally install
+	@wally install
 
 build:
-	rojo build --output tinynet.rbxmx
+	@rojo build --output tinynet.rbxmx
 
-src-map:
-	rojo sourcemap > sourcemap.json
+srcmap:
+	@rojo sourcemap > sourcemap.json
 
 clean:
-	rm -rf DevPackages \
-	rm -rf sourcemap.json
+	@rm -rf DevPackages
+	@rm -rf sourcemap.json

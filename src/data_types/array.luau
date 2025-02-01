@@ -29,7 +29,7 @@ local function read<T>(b: buffer, value_reader: (buffer, number) -> (T, number))
 		arr[i] = value
 		cursor += value_size
 	end
-	return arr
+	return arr, cursor
 end 
 
 local function write<T>(arr: { T }, value_writer: (T) -> buffer): buffer
