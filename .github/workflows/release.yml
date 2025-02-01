@@ -1,0 +1,66 @@
+name: Create Release
+
+on:
+  push:
+    branches:
+      - 'release/v*'
+
+jobs:
+  check_and_release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Aftman
+        uses: ok-nick/setup-aftman@v0.4.2
+        with:
+          version: "v0.2.7"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Install Aftman Tools
+        run: aftman install
+        
+      - name: Build Project
+        run: |
+          mkdir build
+          rojo build --output build/tinynet.rbxmx
+      
+      - name: Get branch name
+        id: branch_name
+        shell: pwsh
+        run: |
+          $FULL_BRANCH = $env:GITHUB_REF -replace '^refs/heads/'
+          $VERSION = $FULL_BRANCH -replace '^release/'
+          echo "branch=$VERSION" >> $env:GITHUB_OUTPUT
+      
+      - name: Check if release exists
+        id: check_release
+        shell: bash
+        run: |
+          VERSION=${GITHUB_REF#refs/heads/}
+          if gh release view "$VERSION" &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Create Release
+        if: steps.check_release.outputs.exists == 'false'
+        uses: softprops/action-gh-release@v1
+        with:
+          name: ${{ steps.branch_name.outputs.branch }}-release
+          tag_name: ${{ steps.branch_name.outputs.branch }}
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+          files: build/tinynet.rbxmx
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

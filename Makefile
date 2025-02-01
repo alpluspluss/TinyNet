@@ -6,7 +6,8 @@ get-deps:
 	@wally install
 
 build:
-	@rojo build --output tinynet.rbxmx
+	@mkdir build
+	@rojo build --output build/tinynet.rbxmx
 
 srcmap:
 	@rojo sourcemap > sourcemap.json
