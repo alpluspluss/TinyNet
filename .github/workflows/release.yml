@@ -57,8 +57,6 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
-          files: |
-            build/*.rbxm
-            build/*.rbxmx
+          files: build/tinynet.rbxmx
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
