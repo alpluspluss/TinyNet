@@ -17,6 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install SSL Dependencies
+        run: |
+          wget http://nz2.archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+          sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2.19_amd64.deb
+          
       - name: Install Aftman
         uses: ok-nick/setup-aftman@v0.4.2
         with:
@@ -27,7 +32,7 @@ jobs:
         run: aftman install
         
       - name: Build Project
-        run: rojo build --output build/tinynet.rbxmx
+        run: make build
       
       - name: Get branch name
         id: branch_name
@@ -47,7 +52,7 @@ jobs:
       
       - name: Create Release
         if: steps.check_release.outputs.exists == 'false'
-        uses: softprops/action-gh-release@v2.2.0
+        uses: softprops/action-gh-release@v1
         with:
           name: Release ${{ steps.branch_name.outputs.branch }}
           tag_name: ${{ steps.branch_name.outputs.branch }}
@@ -57,5 +62,6 @@ jobs:
           files: |
             build/*.rbxm
             build/*.rbxmx
+            # Add any other build artifacts you want to include
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
