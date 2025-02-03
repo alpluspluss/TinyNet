@@ -241,9 +241,7 @@ if ctx == "server" then
         player_reliables[player] = nil
         player_unreliables[player] = nil
     end)
-end
-
-if ctx == "server" then
+    
     rs.Heartbeat:Connect(function()
         if RELIABLE.cursor > 0 or UNRELIABLE.cursor > 0 then
             flush_queue(RELIABLE, reliable_remote)

@@ -1,6 +1,6 @@
 [package]
 name = "alpluspluss/tinynet"
-version = "0.1.0"
+version = "0.1.2-alpha"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 
