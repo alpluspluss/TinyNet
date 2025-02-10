@@ -11,7 +11,10 @@ TinyNet is a high-performance serialization library that transforms Luau data in
 
 ## Installation
 
-TBA
+```shell
+wally add alpluspluss/tinynet
+wally install
+```
 
 ## Performance
 

@@ -12,11 +12,15 @@ local size: number = 0
 local refs: { unknown } = {}
 local next_ref: number = 1
 
-
 -- // MAYBE-TODO: buffer reuse
 -- // was actually planning to be awesome but breh
 -- // too much of a hassle; Roblox GC should handle 
 -- // this fine.
+-- // Yep, after benching, buffer pooling is not worth
+-- // the complexity when the differences are roughly
+-- // 129% worse than creating a new buffer
+-- // my guess is that Roblox GC is optimized for
+-- // short-lived objects(?)
 local function malloc(sz: number): (buffer, number)
 	-- // stubbed for the time being
 	return buffer.create(sz), 0
